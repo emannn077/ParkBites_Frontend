@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/thanks" element={<ThankYou />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-
+      
       <div className="wrap">
         <h1>Orders:</h1>
         {orders?.map((order) => (
