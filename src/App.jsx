@@ -14,11 +14,11 @@ const App = () => {
   useEffect(() => {
     const getOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/order")
+        const response = await axios.get("http://localhost:3001/orders")
         console.log(response.data)
         setOrders(response.data)
       } catch (err) {
-        console.log(err)
+        console.error("Error fetching orders:", err.message)
       }
     }
     getOrders()
@@ -28,11 +28,15 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Welcome />} />
+        <Route path="/trucks" element={<Trucks />} />{" "}
+        {/* ✅ Added missing route */}
         <Route
-          path="/order"
+          path="/order/:truckName"
           element={<OrderForm orders={orders} setOrders={setOrders} />}
         />
         <Route path="/thanks" element={<ThankYou />} />
+        <Route path="/receipt" element={<Receipt />} />{" "}
+        {/* Optional: if used */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>

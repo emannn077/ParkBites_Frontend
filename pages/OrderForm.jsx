@@ -1,8 +1,8 @@
 // src/pages/OrderForm.jsx
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-// import FoodCard from "/components/FoodCard"
-// import CartItem from "/components/CartItem"
+import FoodCard from "../src/components/FoodCard"
+import CartItem from "../src/components/CartItem"
 
 const truckMenus = {
   "Michael Meals": {
@@ -16,7 +16,7 @@ const truckMenus = {
       { name: "Water", price: 0.8 },
     ],
   },
-  "Saad Snacks ": {
+  "Saad Snacks": {
     Snacks: [
       { name: "Fries", price: 2.0 },
       { name: "Hot Dogs", price: 2.5 },
@@ -27,22 +27,22 @@ const truckMenus = {
       { name: "Juice", price: 1.2 },
     ],
   },
-  "Jameela Eats ": {
+  "Jameela Eats": {
     Snacks: [
-      { name: "Asian Rice ", price: 2.0 },
+      { name: "Asian Rice", price: 2.0 },
       { name: "Sushi", price: 2.5 },
       { name: "Dumplings", price: 1.5 },
     ],
     Drinks: [
-      { name: "pepsi", price: 1.0 },
+      { name: "Pepsi", price: 1.0 },
       { name: "Kinza Cola", price: 1.2 },
     ],
   },
-  "Rabab Ice-Cream ": {
+  "Rabab Ice-Cream": {
     Snacks: [
-      { name: "Chocolate Ice cream", price: 1.0 },
-      { name: "Mango Ice cream", price: 2 },
-      { name: "Strawberry Ice cream", price: 1.5 },
+      { name: "Chocolate Ice Cream", price: 1.0 },
+      { name: "Mango Ice Cream", price: 2.0 },
+      { name: "Strawberry Ice Cream", price: 1.5 },
     ],
   },
 }
@@ -56,10 +56,10 @@ const OrderForm = ({ setLatestOrder }) => {
   const [menuItems, setMenuItems] = useState({})
 
   useEffect(() => {
-    setMenuItems(truckMenus[truckName] || {})
+    const normalized = truckName.trim()
+    setMenuItems(truckMenus[normalized] || {})
   }, [truckName])
 
-  //for adding food to cart
   const addToCart = (item) => {
     const items = [...cart.items]
     const index = items.findIndex((i) => i.name === item.name)
@@ -70,7 +70,6 @@ const OrderForm = ({ setLatestOrder }) => {
     setCart({ items, total })
   }
 
-  //for remvoing from cart
   const removeFromCart = (name) => {
     const items = cart.items.filter((i) => i.name !== name)
     const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
@@ -98,21 +97,25 @@ const OrderForm = ({ setLatestOrder }) => {
         />
 
         <h2>Menu</h2>
-        {Object.entries(menuItems).map(([category, items]) => (
-          <div key={category}>
-            <h3>{category}</h3>
-            <div className="menu-category">
-              {items.map((item) => (
-                <FoodCard
-                  key={item.name}
-                  foodName={item.name}
-                  price={item.price}
-                  onAdd={addToCart}
-                />
-              ))}
+        {Object.keys(menuItems).length === 0 ? (
+          <p>Sorry, no menu found for this truck.</p>
+        ) : (
+          Object.entries(menuItems).map(([category, items]) => (
+            <div key={category}>
+              <h3>{category}</h3>
+              <div className="menu-category">
+                {items.map((item) => (
+                  <FoodCard
+                    key={item.name}
+                    foodName={item.name}
+                    price={item.price}
+                    onAdd={addToCart}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
 
         <h2>Cart</h2>
         {cart.items.map((item) => (
@@ -120,7 +123,7 @@ const OrderForm = ({ setLatestOrder }) => {
         ))}
 
         <p>
-          <b>Total: </b> {cart.total.toFixed(2)} BD
+          <b>Total:</b> {cart.total.toFixed(2)} BD
         </p>
         <button type="submit" disabled={cart.items.length === 0}>
           Submit Order
