@@ -1,4 +1,3 @@
-// src/pages/OrderForm.jsx
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import FoodCard from "../src/components/FoodCard"
@@ -38,7 +37,7 @@ const truckMenus = {
       { name: "Kinza Cola", price: 1.2 },
     ],
   },
-  "Rabab Ice-Cream": {
+  "Rabab Ice-Creams": {
     Snacks: [
       { name: "Chocolate Ice Cream", price: 1.0 },
       { name: "Mango Ice Cream", price: 2.0 },
@@ -56,22 +55,25 @@ const OrderForm = ({ setLatestOrder }) => {
   const [menuItems, setMenuItems] = useState({})
 
   useEffect(() => {
-    const normalized = truckName.trim()
-    setMenuItems(truckMenus[normalized] || {})
+    const decodedName = decodeURIComponent(truckName.trim())
+    setMenuItems(truckMenus[decodedName] || {})
   }, [truckName])
 
   const addToCart = (item) => {
     const items = [...cart.items]
     const index = items.findIndex((i) => i.name === item.name)
-    if (index >= 0) items[index].quantity += 1
-    else items.push({ ...item, quantity: 1 })
+    if (index >= 0) {
+      items[index].quantity += 1
+    } else {
+      items.push({ ...item, quantity: 1, id: Date.now() + Math.random() })
+    }
 
     const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
     setCart({ items, total })
   }
 
-  const removeFromCart = (name) => {
-    const items = cart.items.filter((i) => i.name !== name)
+  const removeFromCart = (id) => {
+    const items = cart.items.filter((i) => i.id !== id)
     const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
     setCart({ items, total })
   }
@@ -85,7 +87,7 @@ const OrderForm = ({ setLatestOrder }) => {
 
   return (
     <div className="order-page">
-      <h1>Order from {truckName}</h1>
+      <h1>Order from {decodeURIComponent(truckName)}</h1>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -104,9 +106,9 @@ const OrderForm = ({ setLatestOrder }) => {
             <div key={category}>
               <h3>{category}</h3>
               <div className="menu-category">
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <FoodCard
-                    key={item.name}
+                    key={`${item.name}-${index}`}
                     foodName={item.name}
                     price={item.price}
                     onAdd={addToCart}
@@ -118,9 +120,17 @@ const OrderForm = ({ setLatestOrder }) => {
         )}
 
         <h2>Cart</h2>
-        {cart.items.map((item) => (
-          <CartItem key={item.name} item={item} onRemove={removeFromCart} />
-        ))}
+        {cart.items.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          cart.items.map((item) => (
+            <CartItem
+              key={item.id}
+              item={item}
+              onRemove={() => removeFromCart(item.id)}
+            />
+          ))
+        )}
 
         <p>
           <b>Total:</b> {cart.total.toFixed(2)} BD

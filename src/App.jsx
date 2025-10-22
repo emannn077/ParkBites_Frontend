@@ -7,9 +7,9 @@ import ThankYou from "../pages/ThankYou"
 import Receipt from "../pages/Receipt"
 import Trucks from "../pages/Trucks"
 import "./App.css"
-
 const App = () => {
   const [orders, setOrders] = useState([])
+  const [latestOrder, setLatestOrder] = useState(null)
 
   useEffect(() => {
     const getOrders = async () => {
@@ -28,19 +28,22 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/trucks" element={<Trucks />} />{" "}
-        {/* ✅ Added missing route */}
+        <Route path="/trucks" element={<Trucks />} />
         <Route
           path="/order/:truckName"
-          element={<OrderForm orders={orders} setOrders={setOrders} />}
+          element={
+            <OrderForm
+              order={latestOrder}
+              setOrders={setOrders}
+              setLatestOrder={setLatestOrder}
+            />
+          }
         />
         <Route path="/thanks" element={<ThankYou />} />
-        <Route path="/receipt" element={<Receipt />} />{" "}
-        {/* Optional: if used */}
+        <Route path="/receipt" element={<Receipt order={latestOrder} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   )
 }
-
 export default App
