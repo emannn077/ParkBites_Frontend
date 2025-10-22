@@ -7,6 +7,7 @@ import ThankYou from "../pages/ThankYou"
 import Receipt from "../pages/Receipt"
 import Trucks from "../pages/Trucks"
 import "./App.css"
+
 const App = () => {
   const [orders, setOrders] = useState([])
   const [latestOrder, setLatestOrder] = useState(null)
@@ -32,18 +33,15 @@ const App = () => {
         <Route
           path="/order/:truckName"
           element={
-            <OrderForm
-              order={latestOrder}
-              setOrders={setOrders}
-              setLatestOrder={setLatestOrder}
-            />
+            <OrderForm setLatestOrder={setLatestOrder} setOrders={setOrders} />
           }
         />
         <Route path="/thanks" element={<ThankYou />} />
-        <Route path="/receipt" element={<Receipt order={latestOrder} />} />
+        <Route path="/receipt" element={<Receipt orderData={latestOrder} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   )
 }
+
 export default App
