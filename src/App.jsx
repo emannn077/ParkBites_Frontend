@@ -7,18 +7,18 @@ import ThankYou from "../pages/ThankYou"
 import Receipt from "../pages/Receipt"
 import Trucks from "../pages/Trucks"
 import "./App.css"
-
 const App = () => {
   const [orders, setOrders] = useState([])
+  const [latestOrder, setLatestOrder] = useState(null)
 
   useEffect(() => {
     const getOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/api/order")
+        const response = await axios.get("http://localhost:3001/orders")
         console.log(response.data)
         setOrders(response.data)
       } catch (err) {
-        console.log(err)
+        console.error("Error fetching orders:", err.message)
       }
     }
     getOrders()
@@ -28,15 +28,22 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Welcome />} />
+        <Route path="/trucks" element={<Trucks />} />
         <Route
-          path="/order"
-          element={<OrderForm orders={orders} setOrders={setOrders} />}
+          path="/order/:truckName"
+          element={
+            <OrderForm
+              order={latestOrder}
+              setOrders={setOrders}
+              setLatestOrder={setLatestOrder}
+            />
+          }
         />
         <Route path="/thanks" element={<ThankYou />} />
+        <Route path="/receipt" element={<Receipt order={latestOrder} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   )
 }
-
 export default App
