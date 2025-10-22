@@ -1,42 +1,144 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+:root {
+  --bg: #0b0b12;
+  --card: #101423;
+  --ink: #eef3ff;
+  --muted: #a9b4d4;
+  --accent: #ff63c3;
+  --accent-2: #7cf8a3;
+  --accent-3: #7aa0ff;
+  --accent-4: #ffd36e;
+  --bd: 1px solid rgba(255,255,255,.08);
+  --radius: 18px;
+  --radius-lg: 26px;
+  --shadow: 0 10px 30px rgba(0,0,0,.25), 0 2px 8px rgba(0,0,0,.2);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Outfit:wght@400;600;800&display=swap');
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 120% -10%, rgba(124,248,163,.18), transparent 60%),
+    radial-gradient(1000px 600px at -10% 120%, rgba(255,99,195,.18), transparent 60%),
+    linear-gradient(180deg, #0c1020 0%, #0b0b12 60%);
+  font-family: 'Nunito', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Welcome Page */
+.welcome {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.welcome h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin-bottom: 18px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.welcome-gif {
+  width: min(420px, 70vw);
+  border-radius: var(--radius-lg);
+  border: var(--bd);
+  box-shadow: var(--shadow);
+  animation: popIn 0.8s ease;
+}
+
+.start-button {
+  display: inline-block;
+  margin-top: 24px;
+  background: linear-gradient(90deg, var(--accent-3), var(--accent-2));
+  color: #101018;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(122,160,255,.28);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.start-button:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.start-button::after { content: ' →'; }
+
+/* Trucks Page */
+.trucks-page {
+  padding: 60px 0;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.trucks-page h1 {
+  margin-bottom: 18px;
+  font-size: clamp(26px, 3vw, 42px);
+  background: linear-gradient(90deg, var(--accent), var(--accent-4));
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.truck-list {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  width: min(1000px, 94%);
+  margin: 0 auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.truck-card {
+  position: relative;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border: var(--bd);
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, filter .18s ease;
 }
 
-.card {
-  padding: 2em;
+.truck-card:hover {
+  transform: translateY(-6px) scale(1.03) rotate(-1deg);
 }
 
-.read-the-docs {
-  color: #888;
+.truck-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,.35));
 }
+
+.truck-card h3 {
+  margin: 10px 0 6px;
+}
+
+.truck-card::before {
+  content: '🍔';
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  font-size: 42px;
+  rotate: 18deg;
+  opacity: .25;
+}
+
+.truck-card:nth-child(2)::before { content: '🌭'; }
+.truck-card:nth-child(3)::before { content: '🍦'; }
+.truck-card:nth-child(4)::before { content: '🍣'; }
+
+@keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
